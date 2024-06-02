@@ -4,14 +4,12 @@ import 'package:extension_tech_task_app/utils/helper.dart';
 import 'package:extension_tech_task_app/utils/routes/route_generator.dart';
 import 'package:extension_tech_task_app/utils/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await PrefHelper.initSharedPref();
-  await dotenv.load(fileName: ".env");
 
   runApp(const MyApp());
 }
