@@ -20,8 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
     navigateToHome();
   }
 
-  void navigateToHome() async {
-    await Timer(
+  void navigateToHome() {
+    Timer(
       const Duration(seconds: 3),
       () {
         Navigator.pushNamedAndRemoveUntil(
@@ -32,13 +32,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+      final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Center(
         child: Shimmer.fromColors(
             baseColor: Colors.blue.shade700,
             highlightColor: Colors.white,
             loop: 3,
-            child: Image.asset(extensionLogo)),
+            child: Image.asset(extensionLogo, width: size.width * 0.5)),
       ),
     );
   }

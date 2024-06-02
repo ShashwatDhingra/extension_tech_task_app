@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:extension_tech_task_app/constants/constants.dart';
+import 'package:extension_tech_task_app/presentation/view/home/widgets/app_bar.dart';
 import 'package:extension_tech_task_app/presentation/view_model/home_view_model.dart';
-import 'package:extension_tech_task_app/utils/helper.dart';
 import 'package:extension_tech_task_app/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    // Provider of HomeScreen
+    // Setting up a Stream to listen network connectivity.
     final homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
     StreamSubscription<List<ConnectivityResult>> subscription = Connectivity()
         .onConnectivityChanged
@@ -33,36 +33,32 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-            elevation: 2,
-            shadowColor: Colors.grey.shade100,
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            leading: Image.asset(extensionLogo),
-            title: const Text('Extention-Erp'),
-            actions: [
-              Consumer<HomeViewModel>(
-                  builder: (context, value, child) => value.isInternetConnected
-                      ? const Icon(
-                          Icons.wifi,
-                          color: Colors.green,
-                        )
-                      : const Icon(Icons.wifi_off_sharp, color: Colors.red)),
-              12.pw
-            ]),
+        appBar: getHomeAppBar(),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Greeting to User
+
                 const ListTile(
-                  title: Text('Hello, Shashwat',),
+                  title: Text(
+                    'Hello, Shashwat',
+                  ),
                   subtitle: Text('shashwatdhingra2@gmail.com'),
-                  leading: CircleAvatar(child: Icon(Icons.person, color: Colors.white,), backgroundColor: Colors.black,),
+                  leading: CircleAvatar(
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.black,
+                  ),
                 ),
                 24.ph,
+
+                // Check-In/Out Button
+
                 Consumer<HomeViewModel>(
                     builder: (context, value, child) => Center(
                           child: SizedBox(
@@ -82,13 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : Colors.black,
                                   child: value.isButtonLoading
                                       ? SizedBox.square(
-                                          // dimension: 20,
-                                          child: SizedBox.square(
-                                            dimension: 22,
-                                            child: CircularProgressIndicator(
-                                                color: value.hasLastCheckIn ? Colors.black : Colors.white,
-                                                strokeWidth: 1),
-                                          ))
+                                          dimension: 22,
+                                          child: Utils.getLoader(
+                                              color: value.hasLastCheckIn
+                                                  ? Colors.black
+                                                  : Colors.white),
+                                        )
                                       : value.hasLastCheckIn
                                           ? const Text(
                                               'CheckOut',
@@ -100,6 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )),
                 52.ph,
+
+                // Employee Check-In Data List
+
                 const Text(
                   'Employee Check-In Data',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
@@ -109,9 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context, value, child) => value
                             .isInternetConnected
                         ? value.isCheckInListLoading
-                            ? const Expanded(
-                                child:
-                                    Center(child: CircularProgressIndicator()))
+                            ? Expanded(child: Center(child: Utils.getLoader()))
                             : Expanded(
                                 child: Column(
                                   children: [

@@ -9,18 +9,20 @@ import 'package:extension_tech_task_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class HomeViewModel extends ChangeNotifier {
+  // Variables
   bool isButtonLoading = false;
   bool isCheckInListLoading = false;
   bool isInternetConnected = false;
   bool hasLastCheckIn = false;
+  EmployeeCheckInModel? checkInList;
+
+  // Classes
   CheckInRepository checkInRepo = CheckInRepository();
   DBHelper dbHelper = DBHelper();
   PrefHelper prefHelper = PrefHelper();
-  EmployeeCheckInModel? checkInList;
 
   HomeViewModel() {
     checkInternetConnection();
-    getEmployeeCheckIns();
     getLastCheckInStatus();
   }
 
@@ -45,16 +47,21 @@ class HomeViewModel extends ChangeNotifier {
       isInternetConnected = false;
     } else {
       isInternetConnected = true;
+      getEmployeeCheckIns();
     }
 
     notifyListeners();
   }
 
   Future<void> syncData() async {
+
+    // Getting pending Check-In/Out Offlline saved Records.
     final pendingCheckIns = await DBHelper().getPendingCheckIns();
+
     pendingCheckIns.forEach((checkIn) async {
       try {
         toggleButtonLoading(true);
+
         // Sycing the Check-In on Network
         final response = await checkInRepo.createCheckInOut(checkIn);
 
@@ -77,7 +84,8 @@ class HomeViewModel extends ChangeNotifier {
     toggleButtonLoading(true);
     try {
       if (isInternetConnected) {
-        // Check-In directly on Network
+
+        // Check-In directly on Cloud
         final response = await checkInRepo.createCheckInOut(CheckInModel(
             employee: 'HR-EMP-00002',
             employeeName: 'Ashish',
@@ -162,7 +170,7 @@ class HomeViewModel extends ChangeNotifier {
   Future<void> getEmployeeCheckIns() async {
     toggleCheckInListLoading(true);
     try {
-      checkInList = await checkInRepo.getEmployeeCheckIn();
+      checkInList = await checkInRepo.getEmployeeCheckIns();
     } catch (e) {
       log(e.toString());
     } finally {

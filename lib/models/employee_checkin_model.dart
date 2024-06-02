@@ -5,8 +5,6 @@ class EmployeeCheckInModel {
 
   EmployeeCheckInModel.fromMap(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      print('here');
-      print(json['data']);
       data = <Data>[];
       (json['data'] as List).forEach((v) {
         data!.add(Data.fromMap(v));

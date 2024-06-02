@@ -1,7 +1,4 @@
-import 'package:another_flushbar/flushbar.dart';
-import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Utils {
@@ -10,6 +7,13 @@ class Utils {
         msg: message,
         backgroundColor: isError ? Colors.red : Colors.black,
         textColor: Colors.white);
+  }
+
+  static Widget getLoader({Color color = Colors.black}) {
+    return CircularProgressIndicator(
+      color: color,
+      strokeWidth: 1,
+    );
   }
 }
 
